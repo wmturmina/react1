@@ -60,8 +60,7 @@ class Home extends Component {
                       <Tweet
                         key={item}
                         usuario={item.usuario}
-                        nomeUsuario={item.nomeUsuario}
-                        tweet={item.tweet}
+                        conteudo={item.conteudo}
                       />
                     )
                   })
