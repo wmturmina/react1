@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class TweetForm extends Component {
-  constructor(){
+  constructor() {
     super()
     this.state = {
       texto: ''
@@ -13,27 +14,64 @@ class TweetForm extends Component {
       texto: event.target.value
     })
   }
-  
+
+  handlerSubmit = (event) => {
+    event.preventDefault()
+    this.setState({
+      texto: ''
+    })
+    this.props.onSave({
+      usuario: {
+        login: '@wmturmina',
+        nome: 'Wendell',
+        sobrenome: 'Turmina',
+        email: 'wmturmina@gmail.com'
+      },
+      conteudo: this.state.texto
+    })
+  }
+
   render() {
     const {
       texto
     } = this.state
-    return(
+    return (
       <form className="novoTweet">
-          <div className="novoTweet__editorArea">
-              <span className={`novoTweet__status
+        <div className="novoTweet__editorArea">
+          <span className={`novoTweet__status
                 ${texto.length > 10
-                ? 'novoTweet__status--invalido'
-                : ''}`
-            }>{texto.length}/140</span>
-              <textarea className="novoTweet__editor" placeholder="O que está acontecendo?"
-              onChange={this.handlerOnChange}>
-              </textarea>
-          </div>
-          <button disabled={texto.length > 10} type="submit" className="novoTweet__envia">Tweetar</button>
+              ? 'novoTweet__status--invalido'
+              : ''}`
+          }>{texto.length}/140</span>
+          <textarea
+            className="novoTweet__editor"
+            placeholder="O que está acontecendo?"
+            onChange={this.handlerOnChange}
+            value={texto}
+          >
+          </textarea>
+        </div>
+        <button
+          onClick={this.handlerSubmit}
+          disabled={texto.length > 10}
+          type="submit"
+          className="novoTweet__envia"
+        >
+          Tweetar
+          </button>
       </form>
     )
   }
 }
+
+TweetForm.propTypes = {
+  onSave: PropTypes.func.isRequired
+}
+
+/*
+TweetForm.defaultProps = {
+  onSave: () => null
+}
+*/
 
 export default TweetForm
