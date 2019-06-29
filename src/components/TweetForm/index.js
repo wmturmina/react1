@@ -22,10 +22,10 @@ class TweetForm extends Component {
     })
     this.props.onSave({
       usuario: {
-        login: 'vanessametonini',
+        login: 'wendellturmina',
         nome: 'Wendell',
         sobrenome: 'Turmina',
-        email: 'wmturmina@gmail.com'
+        email: 'wendell.turmina@e-deploy.com.br'
       },
       conteudo: this.state.texto
     })

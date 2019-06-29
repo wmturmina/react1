@@ -19,7 +19,7 @@ class Tweet extends Component {
       totalLikes
     } = this.state
 
-    await axios.post(`http://10.200.24.101:3001/tweets/${this.props.id}/like?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    await axios.post(`http://react-api-edp.herokuapp.com/tweets/${this.props.id}/like?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
 
     this.setState({
       likeado: !likeado,

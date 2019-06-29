@@ -21,7 +21,7 @@ class LoginPage extends Component {
       login: this.login.current.value,
       senha: this.password.current.value
     }
-    fetch('http://10.200.24.101:3001/login', {
+    fetch('http://react-api-edp.herokuapp.com/login', {
       method: 'POST',
       body: JSON.stringify(objLogin)
     })

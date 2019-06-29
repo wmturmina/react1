@@ -22,7 +22,7 @@ class Home extends Component {
   }
 
   getTweets = () => {
-    fetch(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    fetch(`http://react-api-edp.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
       .then((response) => {
         console.warn(response)
         return response.json()
@@ -39,7 +39,7 @@ class Home extends Component {
   }
 
   getTweets2 = () => {
-    axios.get(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    axios.get(`http://react-api-edp.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
       .then((response) => {
         this.setState({
           listaTweets: response.data
@@ -51,7 +51,7 @@ class Home extends Component {
     const {
       listaTweets
     } = this.state
-    axios.post(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+    axios.post(`http://react-api-edp.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
       conteudo: novoTweet.conteudo,
       login: novoTweet.usuario.login 
     })
@@ -69,7 +69,7 @@ class Home extends Component {
     const {
       listaTweets
     } = this.state
-    const resposta = await axios.post(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+    const resposta = await axios.post(`http://react-api-edp.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
       conteudo: novoTweet.conteudo,
       login: novoTweet.usuario.login
     })
@@ -86,7 +86,7 @@ class Home extends Component {
     const {
       listaTweets
     } = this.state
-    axios.delete(`http://10.200.24.101:3001/tweets/${id}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    axios.delete(`http://react-api-edp.herokuapp.com/tweets/${id}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
       .then((data) => {
         const listaAtualizada = listaTweets.filter(item => item._id !== id)
         this.setState({
