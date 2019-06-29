@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react'
+import axios from 'axios'
 import Cabecalho from '../../components/Cabecalho'
 import NavMenu from '../../components/NavMenu'
 import Dashboard from '../../components/Dashboard'
@@ -16,11 +17,12 @@ class Home extends Component {
   }
 
   componentDidMount(){
-    this.getTweets()
+    //this.getTweets()
+    this.getTweets2()
   }
 
   getTweets = () => {
-    fetch('http://10.200.24.101:3001/tweets')
+    fetch(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
       .then((response) => {
         console.warn(response)
         return response.json()
@@ -36,16 +38,61 @@ class Home extends Component {
       })
   }
 
+  getTweets2 = () => {
+    axios.get(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+      .then((response) => {
+        this.setState({
+          listaTweets: response.data
+        })
+      })
+  }
+
   adicionarTweet = (novoTweet) => {
     const {
       listaTweets
     } = this.state
+    axios.post(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+      conteudo: novoTweet.conteudo,
+      login: novoTweet.usuario.login 
+    })
+      .then((response) => {
+        this.setState({
+          listaTweets: [
+            response.data,
+            ...listaTweets
+          ]
+        })
+      })
+  }
+
+  adicionarTweet2 = async (novoTweet) => {
+    const {
+      listaTweets
+    } = this.state
+    const resposta = await axios.post(`http://10.200.24.101:3001/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+      conteudo: novoTweet.conteudo,
+      login: novoTweet.usuario.login
+    })
+
     this.setState({
       listaTweets: [
-        ...listaTweets,
-        novoTweet
+        resposta.data,
+        ...listaTweets
       ]
     })
+  }
+
+  handlerRemoveTweet = (id) => {
+    const {
+      listaTweets
+    } = this.state
+    axios.delete(`http://10.200.24.101:3001/tweets/${id}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+      .then((data) => {
+        const listaAtualizada = listaTweets.filter(item => item._id !== id)
+        this.setState({
+          listaTweets: listaAtualizada
+        })
+      })
   }
 
   render() {
@@ -82,6 +129,11 @@ class Home extends Component {
                         key={key}
                         usuario={item.usuario}
                         conteudo={item.conteudo}
+                        likeado={item.likeado}
+                        removivel={item.removivel}
+                        totalLikes={item.totalLikes}
+                        id={item._id}
+                        onRemove={this.handlerRemoveTweet}
                       />
                     )
                   })

@@ -1,4 +1,6 @@
 import React, { Component, Fragment, createRef } from 'react'
+import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import Cabecalho from '../../components/Cabecalho'
 import Widget from '../../components/Widget'
 
@@ -31,6 +33,7 @@ class LoginPage extends Component {
       .then((retornoLogin) => {
         console.warn(retornoLogin)
         localStorage.setItem('TOKEN', retornoLogin.token)
+        this.props.history.push('/')
       })
       .catch((error) => {
         console.warn(error)
@@ -79,5 +82,9 @@ class LoginPage extends Component {
   }
 }
 
+LoginPage.propTypes = {
+  history: PropTypes.object.isRequired
+}
 
-export default LoginPage
+// withRouter é necessário quando o componente não está vinculado a uma rota
+export default withRouter(LoginPage)
