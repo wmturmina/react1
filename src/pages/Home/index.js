@@ -15,6 +15,27 @@ class Home extends Component {
     }
   }
 
+  componentDidMount(){
+    this.getTweets()
+  }
+
+  getTweets = () => {
+    fetch('http://10.200.24.101:3001/tweets')
+      .then((response) => {
+        console.warn(response)
+        return response.json()
+      })
+      .then((tweets) => {
+        console.warn(tweets)
+        this.setState({
+          listaTweets: tweets
+        })
+      })
+      .catch((erro) => {
+        console.warn(erro)
+      })
+  }
+
   adicionarTweet = (novoTweet) => {
     const {
       listaTweets
@@ -58,7 +79,7 @@ class Home extends Component {
                   listaTweets.map((item, key) => {
                     return (
                       <Tweet
-                        key={item}
+                        key={key}
                         usuario={item.usuario}
                         conteudo={item.conteudo}
                       />
