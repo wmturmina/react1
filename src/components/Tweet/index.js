@@ -34,6 +34,17 @@ class Tweet extends Component {
     } = this.props
     onRemove(id)
   }
+
+  handlerSelect = () => {
+    const {
+      onSelect,
+      id,
+      inModal
+    } = this.props
+    if (!inModal)
+      onSelect(id)
+  }
+
   render() {
     const {
       conteudo,
@@ -54,7 +65,7 @@ class Tweet extends Component {
     } = this.state
 
     return (
-      <article className="tweet">
+      <article className="tweet" onClick={this.handlerSelect}>
         <div className="tweet__cabecalho">
           <img className="tweet__fotoUsuario" src={thumb} alt="" />
           <span className="tweet__nomeUsuario">{`${nome} ${sobrenome}`}</span>
@@ -109,7 +120,8 @@ Tweet.propTypes = {
     sobrenome: PropTypes.string,
     foto: PropTypes.string,
     email: PropTypes.string
-  })
+  }),
+  onSelect: PropTypes.func
 }
 
 Tweet.defaultProps = {

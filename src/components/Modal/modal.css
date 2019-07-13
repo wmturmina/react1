@@ -16,5 +16,6 @@
   pointer-events: auto;
 }
 .modal_wrap {
-  margin: 10%
+  margin: 10%;
+  background-color: #ffffff;
 }

@@ -6,13 +6,12 @@ class Modal extends Component {
   render() {
     const {
       children,
-      isAberto,
       onClose
     } = this.props
     return (
-      <div className={`modal ${isAberto && 'modal--isAtivo'}`} onClick={onClose}>
+      <div className="modal modal--isAtivo" onClick={onClose}>
         <div className="modal_wrap">
-          {isAberto && children}
+          {children}
         </div>
       </div>
     )

@@ -7,12 +7,14 @@ import Widget from '../../components/Widget'
 import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
 import TweetForm from '../../components/TweetForm'
+import Modal from '../../components/Modal'
 
 class Home extends Component {
   constructor() {
     super()
     this.state = {
-      listaTweets: []
+      listaTweets: [],
+      tweetSelecionado: null
     }
   }
 
@@ -90,14 +92,31 @@ class Home extends Component {
       .then((data) => {
         const listaAtualizada = listaTweets.filter(item => item._id !== id)
         this.setState({
-          listaTweets: listaAtualizada
+          listaTweets: listaAtualizada,
+          tweetSelecionado: null
         })
       })
   }
 
-  render() {
+  handleAbreModal = (id) => {
     const {
       listaTweets
+    } = this.state
+    this.setState({
+      tweetSelecionado: listaTweets.find(item => item._id === id)
+    })
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      tweetSelecionado: null
+    })
+  }
+
+  render() {
+    const {
+      listaTweets,
+      tweetSelecionado
     } = this.state
 
     return (
@@ -134,6 +153,7 @@ class Home extends Component {
                         totalLikes={item.totalLikes}
                         id={item._id}
                         onRemove={this.handlerRemoveTweet}
+                        onSelect={this.handleAbreModal}
                       />
                     )
                   })
@@ -142,9 +162,26 @@ class Home extends Component {
             </Widget>
           </Dashboard>
         </div>
+        {tweetSelecionado &&
+          <Modal
+            onClose={this.handleCloseModal}
+          >
+            <Tweet
+              usuario={tweetSelecionado.usuario}
+              conteudo={tweetSelecionado.conteudo}
+              likeado={tweetSelecionado.likeado}
+              removivel={tweetSelecionado.removivel}
+              totalLikes={tweetSelecionado.totalLikes}
+              id={tweetSelecionado._id}
+              onRemove={this.handlerRemoveTweet}
+              likes={tweetSelecionado.likes}
+              inModal
+            />
+          </Modal>
+        }
       </Fragment>
-    );
+    )
   }
 }
 
-export default Home;
+export default Home
