@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import './modal.css'
+
+import { fechaTweet } from '../../actions/tweetActions'
 
 class Modal extends Component {
   render() {
     const {
       children,
-      onClose
+      fechaTweet
     } = this.props
     return (
-      <div className="modal modal--isAtivo" onClick={onClose}>
+      <div className="modal modal--isAtivo" onClick={fechaTweet}>
         <div className="modal_wrap">
           {children}
         </div>
@@ -18,13 +21,10 @@ class Modal extends Component {
   }
 }
 
-Modal.propTypes = {
-  isAberto: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fechaTweet
+  }, dispatch)
 }
 
-Modal.defaultProps ={
-  onClose: () => {}
-}
-
-export default Modal
+export default connect(null, mapDispatchToProps)(Modal)

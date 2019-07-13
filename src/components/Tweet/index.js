@@ -1,48 +1,47 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import axios from 'axios'
 import './tweet.css'
 
+import { removerTweet, abreTweet, likeTweet, adicionarNotificacao } from '../../actions/tweetActions'
+
 class Tweet extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      likeado: props.likeado || false,
-      totalLikes: props.totalLikes || 0
-    }
-  }
   handlerLike = async (event) => {
     event.preventDefault()
-
-    let {
-      likeado,
-      totalLikes
-    } = this.state
-
-    await axios.post(`http://react-api-edp.herokuapp.com/tweets/${this.props.id}/like?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
-
-    this.setState({
-      likeado: !likeado,
-      totalLikes: !likeado ? ++totalLikes: --totalLikes
-    })
-  }
-
-  handlerRemove = () => {
+    event.stopPropagation()
     const {
       id,
-      onRemove
+      likeTweet
     } = this.props
-    onRemove(id)
+    await axios.post(`http://react-api-edp.herokuapp.com/tweets/${id}/like?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    likeTweet(id)
+  }
+
+  handlerRemove = async (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const {
+      id,
+      removerTweet,
+      adicionarNotificacao
+    } = this.props
+
+    await axios.delete(`http://react-api-edp.herokuapp.com/tweets/${id}?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`)
+    removerTweet(id)
+    adicionarNotificacao('Tweet removido com sucesso!')
   }
 
   handlerSelect = () => {
     const {
-      onSelect,
+      abreTweet,
       id,
       inModal
     } = this.props
     if (!inModal)
-      onSelect(id)
+      abreTweet(id)
   }
 
   render() {
@@ -57,12 +56,10 @@ class Tweet extends Component {
         sobrenome,
         email,
         login
-      }
-    } = this.props
-    const {
+      },
       likeado,
       totalLikes
-    } = this.state
+    } = this.props
 
     return (
       <article className="tweet" onClick={this.handlerSelect}>
@@ -111,7 +108,6 @@ Tweet.propTypes = {
   likeado: PropTypes.bool,
   removivel: PropTypes.bool,
   totalLikes: PropTypes.number,
-  onRemove: PropTypes.func.isRequired,
   likes: PropTypes.array,
   inModal: PropTypes.bool,
   usuario: PropTypes.shape({
@@ -120,12 +116,20 @@ Tweet.propTypes = {
     sobrenome: PropTypes.string,
     foto: PropTypes.string,
     email: PropTypes.string
-  }),
-  onSelect: PropTypes.func
+  })
 }
 
 Tweet.defaultProps = {
   inModal: false
 }
 
-export default Tweet
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    removerTweet,
+    abreTweet,
+    likeTweet,
+    adicionarNotificacao
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(Tweet)

@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import axios from 'axios'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { adicionarTweet } from '../../actions/tweetActions'
 
 class TweetForm extends Component {
   constructor() {
@@ -15,20 +19,21 @@ class TweetForm extends Component {
     })
   }
 
-  handlerSubmit = (event) => {
+  handlerSubmit = async (event) => {
+    const {
+      adicionarTweet
+    } = this.props
+
     event.preventDefault()
+
     this.setState({
       texto: ''
     })
-    this.props.onSave({
-      usuario: {
-        login: 'wendellturmina',
-        nome: 'Wendell',
-        sobrenome: 'Turmina',
-        email: 'wendell.turmina@e-deploy.com.br'
-      },
-      conteudo: this.state.texto
+    const resposta = await axios.post(`http://react-api-edp.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`, {
+      conteudo: this.state.texto,
+      login: 'wendellturmina'
     })
+    adicionarTweet(resposta.data)
   }
 
   render() {
@@ -64,14 +69,10 @@ class TweetForm extends Component {
   }
 }
 
-TweetForm.propTypes = {
-  onSave: PropTypes.func.isRequired
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    adicionarTweet
+  }, dispatch)
 }
 
-/*
-TweetForm.defaultProps = {
-  onSave: () => null
-}
-*/
-
-export default TweetForm
+export default connect(null, mapDispatchToProps)(TweetForm)
